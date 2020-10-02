@@ -10,7 +10,7 @@ type Telegram struct {
 }
 
 func (t *Telegram) Send(message string) bool {
-	retuen true
+	return true
 }
 
 func (t *Telegram) Receiver()(message string, ok bool) {
