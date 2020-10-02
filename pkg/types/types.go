@@ -29,7 +29,7 @@ type Payment struct{
 // Phone is string
 type Phone string
 
-// Account struct
+// Account struct have struct
 type Account struct {
 	 ID int64
 	 Phone Phone
