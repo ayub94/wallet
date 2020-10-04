@@ -54,3 +54,37 @@ func TestService_Reject(t *testing.T) {
 		})
 	}
 }
+
+func TestService_Reject_success(t *testing.T){
+	// создаём сервис
+    s := &Service{}
+	
+	//регистрируем там пользователья
+	phone := types.Phone("+992555551204")
+	account, err := s.RegisterAccount(phone)
+	if err != nil {
+		t.Errorf("Reject(): cannot register account, error = %v",err)
+		return
+	}
+	
+	//паполняем ее счет
+	err = s.Deposit(account.ID, 1_000_000)
+	if err != nil {
+		t.Errorf("Reject(): cannot deposit account, error = %v",err)
+		return
+	}
+
+	//осушествляем платкж на его счет
+	payment, err := s.Pay(account.ID, 100_000, "auto")
+	if err != nil {
+		t.Errorf("Reject(): cannot create payment, error = %v",err)
+		return
+	}
+
+	//попробуем отменит платеж
+	err = s.Reject(payment.ID)
+	if err != nil {
+		t.Errorf("Reject(): error = %v",err)
+		return
+	}
+}
