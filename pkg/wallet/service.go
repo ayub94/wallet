@@ -109,8 +109,7 @@ func (s *Service)Reject(paymentID string)  error{
 	for _, pmnt := range s.payments {
 		if pmnt.ID == paymentID {
 			findPayment = pmnt
-			findPayment.Status = types.PaymentStatusFail
-			return nil
+			break
 		}
 	}	
 	if findPayment==nil{
@@ -119,13 +118,14 @@ func (s *Service)Reject(paymentID string)  error{
     for _, acnt := range s.accounts {
 	    if acnt.ID == findPayment.AccountID{
 			findAccount = acnt
-			findAccount.Balance += findPayment.Amount
+			break	
 		}
 	}
 	if findAccount==nil{
 		return ErrAccountNotFound
 	}
-
+	findPayment.Status = types.PaymentStatusFail
+	findAccount.Balance += findPayment.Amount
 	return nil
 }
 
