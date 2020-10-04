@@ -17,6 +17,7 @@ var (
 	ErrRegisteredPhone = errors.New("Phone already registered")
 	ErrMustBePossitive = errors.New("Amount must be greater than zero")
 	ErrNotEnoughpBalance = errors.New("not enoughp balance")
+	ErrPaymentNotFound = errors.New("payment not found")
 )
 
 func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error) {
@@ -98,4 +99,41 @@ func (s *Service) FindAccountByID(accountID int64)(*types.Account, error) {
 		}
 	}
 	return nil, ErrAccountNotFound
+}
+
+func (s *Service)Reject(paymentID string)  error{
+
+	var findPayment *types.Payment
+	var findAccount *types.Account
+
+	for _, pmnt := range s.payments {
+		if pmnt.ID == paymentID {
+			findPayment = pmnt
+			findPayment.Status = types.PaymentStatusFail
+			return nil
+		}
+	}	
+	if findPayment==nil{
+		return ErrPaymentNotFound
+	}	
+    for _, acnt := range s.accounts {
+	    if acnt.ID == findPayment.AccountID{
+			findAccount = acnt
+			findAccount.Balance += findPayment.Amount
+		}
+	}
+	if findAccount==nil{
+		return ErrAccountNotFound
+	}
+
+	return nil
+}
+
+func (s *Service) FindPaymentByID(paymentID string)(*types.Payment, error) {
+	for _, payment := range s.payments {
+		if payment.ID == paymentID {
+			return payment, nil
+		}
+	}
+	return nil, ErrPaymentNotFound
 }
