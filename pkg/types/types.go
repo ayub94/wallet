@@ -26,7 +26,7 @@ type Payment struct{
     Status             PaymentStatus
 }
 
-// Phone is string
+// Phone is string phone
 type Phone string
 
 // Account struct have struct
