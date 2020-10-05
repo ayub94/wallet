@@ -129,14 +129,34 @@ var defaultTestAccountUser = testAccount {
 	{amount: 1_000_00, category: "auto"},
 },	
 }
-//func TestService_Repeat_success(t *testing.T){
+func TestService_Repeat_success(t *testing.T){
 
-//	s := newTestServiceUser()
-//	account, err := s.RegisterAccount(data.phone)
-//	if err != nil {
-//		t.Errorf("RegisterAccount: cannot register account, error = %v", err)
-//		return 
-//	}
-//}
+	s := newTestServiceUser()
+	acc, err := s.RegisterAccount("+992934251222")
+	if err != nil {
+		t.Errorf("RegisterAccount: cannot register account, error = %v", err)
+		return 
+	}
+	err = s.Deposit(acc.ID, 100)
+	if err != nil {
+		t.Errorf("can not deposit account, error = %v", err)
+		return 
+	}
+	payment, err := s.Pay(acc.ID, 10, "ice-cream")
+	if err != nil {
+		t.Errorf("can not pay, error = %v",err)
+		return 
+	}
+	payment1, err := s.Repeat(payment.ID)
+	if err != nil {
+		t.Errorf("can not repeat payment, error = %v",err)
+		return
+	}
+	if payment.Amount != payment1.Amount || payment.Category != payment1.Category {
+		t.Error("wrong result")
+	}
+
+
+}
 
 
