@@ -34,6 +34,3 @@ func main() {
 	fmt.Println(account)	
 }
 
-
-
-
