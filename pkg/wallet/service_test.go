@@ -33,7 +33,7 @@ func newTestServiceUser() *testServiceUser {
 }
 func (s *testServiceUser) addAccountWithBalance(phone types.Phone, balance types.Money)(*types.Account, error) {
 	// sign in thre a user
-	account, err := s.RegisterAccountUser(phone)
+	account, err := s.RegisterAccount("+992555551204")
 	if err != nil {
 		return nil, fmt.Errorf("can not register account, error = %v", err)
 	}
@@ -96,7 +96,7 @@ type testAccount struct {
 }
 func (s *testServiceUser) addAccountUser(data testAccount) (*types.Account, []*types.Payment, error) {
 	// регистрируем там пользователья
-	account, err := s.RegisterAccountUser(data.phone)
+	account, err := s.RegisterAccount(data.phone)
 	if err != nil {
 		return nil, nil, fmt.Errorf("cannot register account, error = %v", err)
 	}
@@ -132,7 +132,7 @@ var defaultTestAccountUser = testAccount {
 func TestService_Repeat_success(t *testing.T){
 
 	s := newTestServiceUser()
-	acc, err := s.RegisterAccountUser("+992934251221")
+	acc, err := s.RegisterAccount("+992934251221")
 	if err != nil {
 		t.Errorf("RegisterAccountUser: cannot register account, error = %v", err)
 		return 
