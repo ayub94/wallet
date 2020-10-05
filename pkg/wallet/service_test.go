@@ -160,8 +160,30 @@ func TestService_Repeat_success(t *testing.T){
 	if payment.Amount != payment1.Amount || payment.Category != payment1.Category {
 		t.Error("wrong result")
 	}
+}
 
+func TestService_FindAccountByID_success_user(t *testing.T) {
+	s := newTestServiceUser()
+	
+    s.RegisterAccount("+992934251220")
+	account, err := s.FindAccountByID(1)
 
+	if err != nil{
+		t.Errorf("method FindPaymentByID returned not nil error, payment => %v", account)
+		return
+	}
+}
+
+func TestService_FindAccountByID_notFound_user(t *testing.T) {
+	s := newTestServiceUser()
+	
+    s.RegisterAccount("+992934251220")
+	account, err := s.FindAccountByID(2)
+
+	if err == nil{
+		t.Errorf("method FindPaymentByID returned nil error, payment => %v", account)
+		return
+	}
 }
 
 
