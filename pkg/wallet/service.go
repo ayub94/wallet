@@ -87,6 +87,20 @@ func (s *Service)Pay(acntID int64, amount types.Money, category types.PaymentCat
 	return payment, nil
 	
 }
+
+func (s *Service) FindAccountByID(accountID int64)(*types.Account, error) {
+
+	var account *types.Account
+
+	for _, acc:= range s.accounts {
+		if acc.ID == accountID {
+			account = acc
+			return account, nil
+		}
+	}
+	return nil, ErrAccountNotFound
+}
+
 func (s *Service)Reject(paymentID string)  error{
 
 	var findPayment *types.Payment

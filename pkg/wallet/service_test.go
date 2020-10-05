@@ -35,7 +35,7 @@ func (s *testServiceUser) addAccountWithBalance(phone types.Phone, balance types
 	// sign in thre a user
 	account, err := s.RegisterAccount("+992555551204")
 	if err != nil {
-		return nil, fmt.Errorf("can not register account, error = %v", err)
+		return nil, fmt.Errorf("account alrady reagistered, error = %v", err)
 	}
 	// deposit balance
 	err = s.Deposit(account.ID, balance)
@@ -147,7 +147,12 @@ func TestService_Repeat_success(t *testing.T){
 		t.Errorf("can not pay, error = %v",err)
 		return 
 	}
-	payment1, err := s.Repeat(payment.ID)
+	payment1, err := s.FindPaymentByID(payment.ID)
+
+	if err != nil{
+		t.Errorf("method FindPaymentByID returned not nil error, payment => %v", payment)
+	}
+	payment1, err = s.Repeat(payment.ID)
 	if err != nil {
 		t.Errorf("can not repeat payment, error = %v",err)
 		return
