@@ -20,7 +20,7 @@ var (
 	ErrPaymentNotFound = errors.New("payment not found")
 )
 
-func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error) {
+func (s *Service) RegisterAccountUser(phone types.Phone) (*types.Account, error) {
 	for _, account := range s.accounts {
 		if account.Phone == phone{
 			return nil, ErrRegisteredPhone
