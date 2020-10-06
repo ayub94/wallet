@@ -187,7 +187,7 @@ func TestService_FindAccountByID_notFound_user(t *testing.T) {
 }
 
 
-func TestService_Favorite_success_user(t *testing.T){
+func TestService_FavoritePayment_success_user(t *testing.T){
 	s := newTestServiceUser()
 	
 	account, err := s.RegisterAccount("+992934251220")
@@ -210,7 +210,7 @@ func TestService_Favorite_success_user(t *testing.T){
 
 
 
-	favorite, err := s.favoritePayment(payment.ID, "My Favorite")
+	favorite, err := s.FavoritePayment(payment.ID, "My Favorite")
 
 	if err != nil{
 		t.Errorf("method FavoritePayment returned not nil error, favorite => %v", favorite)
