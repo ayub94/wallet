@@ -186,26 +186,29 @@ func TestService_FindAccountByID_notFound_user(t *testing.T) {
 	}
 }
 
-func TestService_Favorite_success_user(t *testing.T) {
 
+func TestService_Favorite_success_user(t *testing.T){
 	s := newTestServiceUser()
+	
+	account, err := s.RegisterAccount("+992934251220")
 
-	account, err := s.RegisterAccount("+992934251222")
-
-	if err != nil {
-		t.Errorf("method RegisterAccount returned not nil error, account = %v", account)
+	if err != nil{
+		t.Errorf("method RegisterAccount returned not nil error, account => %v", account)
 	}
 
-	err = s.Deposit(account.ID, 150)
-	if err != nil {
-		t.Errorf("can not deposit account, error = %v", err)
-		return 
+	err = s.Deposit(account.ID, 100_00)
+	if err != nil{
+		t.Errorf("method Deposit returned not nil error, error => %v", err)
 	}
-	payment, err := s.Pay(account.ID, 50, "ice-cream")
-	if err != nil {
-		t.Errorf("can not pay, account = %v", payment)
-		return 
+
+
+	payment, err := s.Pay(account.ID, 10_00,"Cafe")
+
+	if err != nil{
+		t.Errorf("method Pay returned not nil error, account => %v", account)
 	}
+
+
 
 	favorite, err := s.favoritePayment(payment.ID, "My Favorite")
 
@@ -217,5 +220,4 @@ func TestService_Favorite_success_user(t *testing.T) {
 	if err != nil{
 		t.Errorf("method PayFromFavorite returned not nil error, paymentFavorite => %v", paymentFavorite)
 	}
-
-}
+}	
