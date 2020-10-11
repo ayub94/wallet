@@ -192,7 +192,7 @@ func (s *Service)PayFromFavorite(favoriteID string)(*types.Payment, error) {
 }
 
 func (s *Service)ExportToFile(path string) error {
-	file, err := os.Open("../../data/infoaccounts.txt")
+	file, err := os.Open("path")
 	if err != nil {
 		log.Print(err)
 		return ErrFileNotFound
