@@ -197,7 +197,7 @@ func (s *Service)ExportToFile(path string) error {
 		log.Print(err)
 		return ErrFileNotFound
 	}
-	log.Printf("%#v, file")
+	log.Printf("%#v", file)
 
 	defer func(){
 		err := file.Close()
