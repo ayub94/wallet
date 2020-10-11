@@ -1,9 +1,12 @@
 package wallet
 
 import (
+	"strconv"
 	"github.com/google/uuid"
 	"github.com/ayub94/wallet/pkg/types"
 	"errors"
+	"log"
+	"os"
 ) 
 
 type Service struct {
@@ -20,6 +23,7 @@ var (
 	ErrNotEnoughpBalance = errors.New("not enoughp balance")
 	ErrPaymentNotFound = errors.New("payment not found")
 	ErrFavoriteNotFound = errors.New("favorite not found")
+	ErrFileNotFound = errors.New("file not found")
 )
 
 func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error) {
@@ -186,3 +190,52 @@ func (s *Service)PayFromFavorite(favoriteID string)(*types.Payment, error) {
 	}
 	return payment, nil
 }
+
+func (s *Service)ExportToFile(path string) error {
+	file, err := os.Open("../../data/accounts.txt")
+	if err != nil {
+		log.Print(err)
+		return ErrFileNotFound
+	}
+	log.Printf("%#v, file")
+
+	defer func(){
+		err := file.Close()
+		if err != nil {
+		log.Print(err)
+		} 
+	}()
+	account, err := s.RegisterAccount("+992900000001")
+	if err != nil {
+		return ErrRegisteredPhone
+	}
+	err = s.Deposit(account.ID, 100_00)
+
+	for _, account := range s.accounts{
+       if err != nil {
+		   return ErrAccountNotFound
+	   }       
+		_, err = file.Write([]byte(strconv.FormatInt(int64(account.ID), 10)))
+		if err != nil {
+			log.Print(err)
+			return err
+		}
+	}
+	return err
+}
+
+/* account := []*types.Account {
+		{ID: 1, Phone: "+992934251221", Balance: 100_00},
+		{ID: 2, Phone: "+992934251222", Balance: 200_00},
+		{ID: 3, Phone: "+992934251223", Balance: 300_00},
+		{ID: 4, Phone: "+992934251224", Balance: 1400_00},
+		
+	}
+	s.accounts = append(s.accounts,account)
+	return account
+	
+
+}
+*/
+
+

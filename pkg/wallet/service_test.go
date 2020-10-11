@@ -38,7 +38,7 @@ func (s *testServiceUser) addAccountWithBalance(phone types.Phone, balance types
 		return nil, fmt.Errorf("account alrady reagistered, error = %v", err)
 	}
 	// deposit balance
-	err = s.Deposit(account.ID, balance)
+	err = s.Deposit(account.ID, 1000)
 	if err != nil {
 		return nil, fmt.Errorf("can not deposit account, error = %v", err)
 	}
