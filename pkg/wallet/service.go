@@ -192,7 +192,7 @@ func (s *Service)PayFromFavorite(favoriteID string)(*types.Payment, error) {
 }
 
 func (s *Service)ExportToFile(path string) error {
-	file, err := os.Open("path")
+	file, err := os.Open(path)
 	if err != nil {
 		log.Print(err)
 		return ErrFileNotFound
@@ -205,11 +205,11 @@ func (s *Service)ExportToFile(path string) error {
 		log.Print(err)
 		} 
 	}()
-	account, err := s.RegisterAccount("+992900000001")
-	if err != nil {
-		return ErrRegisteredPhone
-	}
-	err = s.Deposit(account.ID, 100_00)
+	//account, err := s.RegisterAccount("+992900000001")
+	//if err != nil {
+	//	return ErrRegisteredPhone
+	//}
+	//err = s.Deposit(account.ID, 100_00)
 
 	for _, account := range s.accounts{
        if err != nil {
