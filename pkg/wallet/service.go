@@ -192,7 +192,7 @@ func (s *Service)PayFromFavorite(favoriteID string)(*types.Payment, error) {
 }
 
 func (s *Service)ExportToFile(path string) error {
-	file, err := os.Open("../../data/accounts.txt")
+	file, err := os.Open("../../data/infoaccounts.txt")
 	if err != nil {
 		log.Print(err)
 		return ErrFileNotFound
@@ -215,7 +215,7 @@ func (s *Service)ExportToFile(path string) error {
        if err != nil {
 		   return ErrAccountNotFound
 	   }       
-		_, err = file.Write([]byte(strconv.FormatInt(int64(account.ID), 10)))
+		_, err = file.Write([]byte(strconv.FormatInt(int64(account.ID), 1)))
 		if err != nil {
 			log.Print(err)
 			return err
@@ -233,9 +233,5 @@ func (s *Service)ExportToFile(path string) error {
 	}
 	s.accounts = append(s.accounts,account)
 	return account
-	
-
 }
 */
-
-
