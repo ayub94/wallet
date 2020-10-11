@@ -1,12 +1,13 @@
 package wallet
 
 import (
-	"strconv"
+	//"strconv"
 	"github.com/google/uuid"
 	"github.com/ayub94/wallet/pkg/types"
 	"errors"
 	"log"
 	"os"
+	"fmt"
 ) 
 
 type Service struct {
@@ -197,7 +198,7 @@ func (s *Service)ExportToFile(path string) error {
 		log.Print(err)
 		return ErrFileNotFound
 	}
-	log.Printf("%#v", file)
+	//log.Printf("%#v", file)
 
 	defer func(){
 		err := file.Close()
@@ -205,33 +206,14 @@ func (s *Service)ExportToFile(path string) error {
 		log.Print(err)
 		} 
 	}()
-	//account, err := s.RegisterAccount("+992900000001")
-	//if err != nil {
-	//	return ErrRegisteredPhone
-	//}
-	//err = s.Deposit(account.ID, 100_00)
-
+	var str string
 	for _, account := range s.accounts{
-       if err != nil {
-		   return ErrAccountNotFound
-	   }       
-		_, err = file.Write([]byte(strconv.FormatInt(int64(account.ID), 1)))
+	   str +=  fmt.Sprint(account.ID) + ";"+ fmt.Sprint(account.Phone) +";"+ fmt.Sprint(account.Balance) +"|"
+	}   
+		_, err = file.WriteString(str)
 		if err != nil {
-			log.Print(err)
 			return err
 		}
-	}
-	return err
+	    return nil
 }
 
-/* account := []*types.Account {
-		{ID: 1, Phone: "+992934251221", Balance: 100_00},
-		{ID: 2, Phone: "+992934251222", Balance: 200_00},
-		{ID: 3, Phone: "+992934251223", Balance: 300_00},
-		{ID: 4, Phone: "+992934251224", Balance: 1400_00},
-		
-	}
-	s.accounts = append(s.accounts,account)
-	return account
-}
-*/
