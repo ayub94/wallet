@@ -224,14 +224,21 @@ func (s *Service)ImportFromFile(path string) error {
 		os.Exit(1)
 	}
 	defer file.Close()
+
+	content := make([]byte,0)
 	data:=make([]byte, 64)
 	for {
-		read, err := file.Read(data)
+		readed, err := file.Read(data)
 		if err == io.EOF {
 			break
 		}
-		fmt.Print(string(data[:read]))
-	}
+		if err != nil {   // if there is any errors
+			log.Print(err)
+		}
+		content = append(content, data[:readed]...)
+	}	
+    result:=string(content)
+	log.Print(result)
 	return nil
 }
 
