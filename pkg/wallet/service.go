@@ -1,6 +1,7 @@
 package wallet
 
 import (
+	"io"
 	//"strconv"
 	"github.com/google/uuid"
 	"github.com/ayub94/wallet/pkg/types"
@@ -193,7 +194,7 @@ func (s *Service)PayFromFavorite(favoriteID string)(*types.Payment, error) {
 }
 
 func (s *Service)ExportToFile(path string) error {
-	file, err := os.Create(path)    //File(path, os.O_CREATE | os.O_WRONLY | os.O_APPEND, 2048)
+	file, err := os.Create(path)    
 	if err != nil {
 		log.Print(err)
 		return ErrFileNotFound
@@ -215,5 +216,22 @@ func (s *Service)ExportToFile(path string) error {
 			return err
 		}
 	    return nil
+}
+func (s *Service)ImportFromFile(path string) error {
+	file, err := os.Open(path)
+	if err != nil {
+		log.Print(err)
+		os.Exit(1)
+	}
+	defer file.Close()
+	data:=make([]byte, 64)
+	for {
+		read, err := file.Read(data)
+		if err == io.EOF {
+			break
+		}
+		fmt.Print(string(data[:read]))
+	}
+	return nil
 }
 
