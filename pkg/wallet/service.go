@@ -218,13 +218,11 @@ func (s *Service)ExportToFile(path string) error {
 	    return nil
 }
 func (s *Service)ImportFromFile(path string) error {
-	file, err := os.Open(path)
+	file, err := os.Create(path)
 	if err != nil {
 		log.Print(err)
 		os.Exit(1)
 	}
-	defer file.Close()
-
 	content := make([]byte,0)
 	data:=make([]byte, 64)
 	for {
