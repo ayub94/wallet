@@ -2,13 +2,14 @@ package wallet
 
 import (
 	"io"
-	//"strconv"
+	"strconv"
 	"github.com/google/uuid"
 	"github.com/ayub94/wallet/pkg/types"
 	"errors"
 	"log"
 	"os"
 	"fmt"
+	"strings"
 ) 
 
 type Service struct {
@@ -218,25 +219,56 @@ func (s *Service)ExportToFile(path string) error {
 	    return nil
 }
 func (s *Service)ImportFromFile(path string) error {
-	file, err := os.Create(path)
-	if err != nil {
-		log.Print(err)
-		os.Exit(1)
-	}
-	content := make([]byte,0)
-	data:=make([]byte, 64)
-	for {
-		readed, err := file.Read(data)
-		if err == io.EOF {
-			break
-		}
-		if err != nil {   // if there is any errors
-			log.Print(err)
-		}
-		content = append(content, data[:readed]...)
-	}	
-    result:=string(content)
-	log.Print(result)
-	return nil
-}
+file, err := os.Open(path)
 
+ if err != nil {
+  log.Print(err)
+  return ErrFileNotFound
+ }
+ defer func(){
+  if cerr := file.Close(); cerr != nil {
+   log.Print(cerr)
+  }
+ }()
+ 
+ content :=make([]byte, 0)
+ buf := make([]byte, 4)
+ for {
+  read, err := file.Read(buf)
+  if err == io.EOF {
+   break
+  }
+
+  if err!=nil {
+   log.Print(err)
+   return ErrFileNotFound
+  }
+  content = append(content, buf[:read]...)
+ }
+
+ data:=string(content)
+ 
+ accounts :=strings.Split(data, "|")
+ accounts = accounts[:len(accounts)-1]
+ for _, account := range accounts {
+  value := strings.Split(account, ";")
+  id,err := strconv.Atoi(value[0])
+  if err!=nil {
+   return err
+  }
+  phone :=types.Phone(value[1])
+  balance, err := strconv.Atoi(value[2])
+  if err!=nil {
+   return err
+  }
+  addAccount := &types.Account {
+   ID: int64(id),
+   Phone: phone,
+   Balance: types.Money(balance),
+  }
+
+  s.accounts = append(s.accounts, addAccount)
+  log.Print(account)
+ }
+ return nil
+}
