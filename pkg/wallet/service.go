@@ -340,7 +340,7 @@ func (s *Service)Import(dir string) error{
 		//return ErrFileNotFound
 		err = ErrFileNotFound
 	}
-	if ErrFileNotFound !=nil{
+	if err != ErrFileNotFound{
 
 	defer func(){
 		if cerr := fileaccounts.Close() ; cerr !=nil {
@@ -394,7 +394,7 @@ func (s *Service)Import(dir string) error{
 		//return ErrFileNotFound
 		err = ErrFileNotFound
 	}
-	if ErrFileNotFound !=nil{
+	if err != ErrFileNotFound {
 
 	defer func(){
 		if cerr := filepayments.Close(); cerr !=nil {
@@ -454,7 +454,7 @@ func (s *Service)Import(dir string) error{
 		err = ErrFileNotFound
 	}
 
-	if ErrFileNotFound !=nil{
+	if err != ErrFileNotFound{
 
 	defer func(){
 		if cerr := filefavorites.Close() ; cerr !=nil {
