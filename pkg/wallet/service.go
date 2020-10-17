@@ -335,7 +335,7 @@ func (s *Service)Export(dir string) error {
 		}
 		//return nil		
 	}
-	return ErrFavoriteNotFound
+	return nil
 }	
 
 func (s *Service)Import(dir string) error{
