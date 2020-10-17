@@ -443,8 +443,9 @@ func (s *Service)Import(dir string) error{
 		s.payments = append(s.payments, addPayment)
 		log.Print(payment)
 	}
-}
 	return nil
+}
+	
 
 	filefavorites, err := os.Open(dir + "/favorites.dump")
 	if err != nil {
