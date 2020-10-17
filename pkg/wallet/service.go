@@ -269,6 +269,7 @@ return nil
 }
 
 func (s *Service)Export(dir string) error {
+	if len(s.accounts) != 0{
 	filedir1, err := os.Create(dir + "/accounts.dump") 
 	if err != nil {
 		log.Print(err)
@@ -289,7 +290,8 @@ func (s *Service)Export(dir string) error {
 			return err
 		}
 		return nil
-	
+	}	
+	if len(s.payments) != 0{
 	filedir2, err := os.Create(dir + "/payments.dump") 
 	if err != nil {
 		log.Print(err)
@@ -310,7 +312,8 @@ func (s *Service)Export(dir string) error {
 				return err
 			}
 			return nil
-
+	}	
+	if len(s.favorites) != 0{
 	filedir3, err := os.Create(dir + "/favorits.dump") 
 	if err != nil {
 		log.Print(err)
@@ -331,7 +334,9 @@ func (s *Service)Export(dir string) error {
 			return err
 		}
 		return nil		
-}
+	}
+	return ErrFavoriteNotFound
+}	
 
 func (s *Service)Import(dir string) error{
 	fileaccounts, err := os.Open(dir + "/accounts.dump")
