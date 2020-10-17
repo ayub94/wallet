@@ -246,8 +246,8 @@ data:=string(content)
 accounts :=strings.Split(data, "|")
 accounts = accounts[:len(accounts)-1]
 for _, account := range accounts {
-   value := strings.Split(account, ";")
-   id,err := strconv.Atoi(value[0])
+ value := strings.Split(account, ";")
+ id,err := strconv.Atoi(value[0])
     if err!=nil {
     return err
     }
@@ -331,5 +331,166 @@ func (s *Service)Export(dir string) error {
 			return err
 		}
 		return nil		
+}
+
+func (s *Service)Import(dir string) error{
+	fileaccounts, err := os.Open(dir + "/accounts.dump")
+	if err != nil {
+		log.Print(err)
+		return ErrFileNotFound
+	}
+	defer func(){
+		if cerr := fileaccounts.Close() ; cerr !=nil {
+			log.Print(cerr)
+		}
+	}()
+	actcontent := make([]byte,0)
+	actbuf := make([]byte, 4)
+	for {
+		read, err := fileaccounts.Read(actbuf)
+		if err == io.EOF{
+			break
+		}
+		if err != nil {
+			log.Print(err)
+			return ErrFileNotFound
+		}
+		actcontent = append(actcontent, actbuf[:read]...)
+	}
+	actdata := string(actcontent)
+
+	accounts := strings.Split(actdata, "|")
+	accounts = accounts[:len(accounts)-1]
+
+	for _, account := range accounts {
+		value := strings.Split(account, ";")
+		id, err := strconv.Atoi(value[0])
+		if err != nil {
+			return err
+		}
+		phone := types.Phone(value[1])
+		balance, err := strconv.Atoi(value[2])
+		if err != nil {
+			return err
+		}
+		addAccount := &types.Account {
+			ID: int64(id),
+			Phone: phone,
+			Balance: types.Money(balance),
+	    }
+		 
+		s.accounts = append(s.accounts, addAccount)
+		log.Print(account)
+	}
+	return nil
+	
+	filepayments, err := os.Open(dir + "/payments.dump")
+	if err != nil {
+		log.Print(err)
+		return ErrFileNotFound
+	}
+	defer func(){
+		if cerr := filepayments.Close(); cerr !=nil {
+			log.Print(cerr)
+		}
+	}()
+	pmtcontent := make([]byte,0)
+	pmtbuf := make([]byte, 4)
+	for {
+		read, err := filepayments.Read(pmtbuf)
+		if err == io.EOF{
+			break
+		}
+		if err != nil {
+			log.Print(err)
+			return ErrFileNotFound
+		}
+		pmtcontent = append(pmtcontent, pmtbuf[:read]...)
+	}
+	pmtdata := string(pmtcontent)
+
+	payments := strings.Split(pmtdata, "|")
+	payments = payments[:len(payments)-1]
+
+	for _, payment := range payments {
+		val := strings.Split(payment, ";")
+		accountID, err := strconv.Atoi(val[0])
+		if err != nil {
+			return err
+		}
+		paymentID := string(val[1])
+		paymentAmount, err := strconv.Atoi(val[2])
+		if err != nil {
+			return err
+		}
+		paymentCategory := types.PaymentCategory(val[3])
+		paymentStatus := types.PaymentStatus(val[4])
+		addPayment := &types.Payment {
+			AccountID: int64(accountID),
+			ID:  paymentID,
+			Amount:  types.Money(paymentAmount),
+			Category:  types.PaymentCategory(paymentCategory),
+			Status:   types.PaymentStatus(paymentStatus),    
+	    }
+		 
+		s.payments = append(s.payments, addPayment)
+		log.Print(payment)
+	}
+	return nil
+
+	filefavorites, err := os.Open(dir + "/favorites.dump")
+	if err != nil {
+		log.Print(err)
+		return ErrFileNotFound
+	}
+	defer func(){
+		if cerr := filefavorites.Close() ; cerr !=nil {
+			log.Print(cerr)
+		}
+	}()
+	fvtcontent := make([]byte,0)
+	fvtbuf := make([]byte, 4)
+	for {
+		read, err := filefavorites.Read(fvtbuf)
+		if err == io.EOF{
+			break
+		}
+		if err != nil {
+			log.Print(err)
+			return ErrFileNotFound
+		}
+		fvtcontent = append(fvtcontent,fvtbuf[:read]...)
+	}
+	fvtdata := string(fvtcontent)
+
+	favorites := strings.Split(fvtdata, "|")
+	favorites = favorites[:len(favorites)-1]
+
+	for _, favorite := range favorites {
+		v := strings.Split(favorite, ";")
+		favID := string(v[0])
+		favactID, err := strconv.Atoi(v[1])
+		if err != nil {
+			return err
+		}
+		favName := string(v[2])
+		favAmount, err := strconv.Atoi(v[3])
+		if err != nil {
+			return err
+		}
+		favCategory := types.PaymentCategory(v[4])
+
+		addFavorite := &types.Favorite {
+			ID:  favID,
+			AccountID: int64(favactID),
+			Name:   favName,
+			Amount:  types.Money(favAmount),
+			Category:  types.PaymentCategory(favCategory),    
+	    }
+		 
+		s.favorites = append(s.favorites, addFavorite)
+		log.Print(favorite)
+	}
+	return nil
 }
 
