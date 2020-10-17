@@ -337,8 +337,11 @@ func (s *Service)Import(dir string) error{
 	fileaccounts, err := os.Open(dir + "/accounts.dump")
 	if err != nil {
 		log.Print(err)
-		return ErrFileNotFound
+		//return ErrFileNotFound
+		err = ErrFileNotFound
 	}
+	if ErrFileNotFound !=nil{
+
 	defer func(){
 		if cerr := fileaccounts.Close() ; cerr !=nil {
 			log.Print(cerr)
@@ -382,13 +385,17 @@ func (s *Service)Import(dir string) error{
 		s.accounts = append(s.accounts, addAccount)
 		log.Print(account)
 	}
+   }
 	return nil
 	
 	filepayments, err := os.Open(dir + "/payments.dump")
 	if err != nil {
 		log.Print(err)
-		return ErrFileNotFound
+		//return ErrFileNotFound
+		err = ErrFileNotFound
 	}
+	if ErrFileNotFound !=nil{
+
 	defer func(){
 		if cerr := filepayments.Close(); cerr !=nil {
 			log.Print(cerr)
@@ -436,13 +443,18 @@ func (s *Service)Import(dir string) error{
 		s.payments = append(s.payments, addPayment)
 		log.Print(payment)
 	}
+}
 	return nil
 
 	filefavorites, err := os.Open(dir + "/favorites.dump")
 	if err != nil {
 		log.Print(err)
-		return ErrFileNotFound
+		//return ErrFileNotFound
+		err = ErrFileNotFound
 	}
+
+	if ErrFileNotFound !=nil{
+
 	defer func(){
 		if cerr := filefavorites.Close() ; cerr !=nil {
 			log.Print(cerr)
@@ -491,6 +503,7 @@ func (s *Service)Import(dir string) error{
 		s.favorites = append(s.favorites, addFavorite)
 		log.Print(favorite)
 	}
+}		
 	return nil
 }
 
