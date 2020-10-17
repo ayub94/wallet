@@ -146,7 +146,7 @@ func (s *Service) FindPaymentByID(paymentID string)(*types.Payment, error) {
 	}
 	return nil, ErrPaymentNotFound
 }
-// Repeat zuri baday
+// Repeat, repeat payment meth
 func (s *Service) Repeat(paymentID string)(*types.Payment, error)  {
 	payment, err := s.FindPaymentByID(paymentID)
 	if err != nil {
@@ -289,7 +289,7 @@ func (s *Service)Export(dir string) error {
 		if err != nil {
 			return err
 		}
-		return nil
+	//	return nil
 	}	
 	if len(s.payments) != 0{
 	filedir2, err := os.Create(dir + "/payments.dump") 
@@ -311,7 +311,7 @@ func (s *Service)Export(dir string) error {
 			if err != nil {
 				return err
 			}
-			return nil
+		//	return nil
 	}	
 	if len(s.favorites) != 0{
 	filedir3, err := os.Create(dir + "/favorits.dump") 
@@ -333,7 +333,7 @@ func (s *Service)Export(dir string) error {
 		if err != nil {
 			return err
 		}
-		return nil		
+		//return nil		
 	}
 	return ErrFavoriteNotFound
 }	
