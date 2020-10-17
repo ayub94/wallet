@@ -391,7 +391,7 @@ func (s *Service)Import(dir string) error{
 		log.Print(account)
 	}
    }
-	return nil
+	//return nil
 	
 	filepayments, err := os.Open(dir + "/payments.dump")
 	if err != nil {
@@ -448,7 +448,7 @@ func (s *Service)Import(dir string) error{
 		s.payments = append(s.payments, addPayment)
 		log.Print(payment)
 	}
-	return nil
+	//return nil
 }
 	
 
