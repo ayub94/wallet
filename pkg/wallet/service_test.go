@@ -245,20 +245,8 @@ func TestService_Import_success_user(t *testing.T) {
 	if err != nil {
 		t.Errorf("method ExportToFile returned not nil error, err => %v", err)
 	}
+}	
 
-}
-func TestService_Export_success(t *testing.T) {
-	var svc Service
-	svc.RegisterAccount("+992000000001")
-	svc.RegisterAccount("+992000000002")
-	svc.RegisterAccount("+992000000003")
-  
-	err := svc.ExportToFile("export.txt")
-	if err != nil {
-	  t.Errorf("method ExportToFile returned not nil error, err => %v", err)
-	}
-  
-  }
   
   func TestService_Import_success(t *testing.T) {
 	var svc Service
@@ -268,6 +256,28 @@ func TestService_Export_success(t *testing.T) {
 	}
   
   }
+
+  func TestService_ExportImport_success_user(t *testing.T) {
+	var svc Service
+
+	svc.RegisterAccount("+992000000001")
+	svc.RegisterAccount("+992000000002")
+	svc.RegisterAccount("+992000000003")
+	svc.RegisterAccount("+992000000004")
+	
+	err := svc.Export(".")
+	if err != nil {
+		t.Errorf("method ExportToFile returned not nil error, err => %v", err)
+	}
+
+	err = svc.Import(".")
+	
+	if err != nil {
+		t.Errorf("method ImportToFile returned not nil error, err => %v", err)
+	}
+
+}
+  
 
   func BenchmarkSumPayments_user(b *testing.B) {
 	var svc Service  
@@ -279,43 +289,5 @@ func TestService_Export_success(t *testing.T) {
 
 		}
 	}
-}
-
-func BenchmarkSumPayment_user(b *testing.B){
-	var svc Service
-
-	account, err := svc.RegisterAccount("+992000000001")
-
-	if err != nil {
-		b.Errorf("method RegisterAccount returned not nil error, account => %v", account)
-	}
-
-	err = svc.Deposit(account.ID, 100_00)
-	if err != nil {
-		b.Errorf("method Deposit returned not nil error, error => %v", err)
-	}
-
-	_, err = svc.Pay(account.ID, 1, "Cafe")
-	_, err = svc.Pay(account.ID, 2, "Cafe")
-	_, err = svc.Pay(account.ID, 3, "Cafe")
-	_, err = svc.Pay(account.ID, 4, "Cafe")
-	_, err = svc.Pay(account.ID, 5, "Cafe")
-	_, err = svc.Pay(account.ID, 6, "Cafe")
-	_, err = svc.Pay(account.ID, 7, "Cafe")
-	_, err = svc.Pay(account.ID, 8, "Cafe")
-	_, err = svc.Pay(account.ID, 9, "Cafe")
-	_, err = svc.Pay(account.ID, 10, "Cafe")
-	_, err = svc.Pay(account.ID, 11, "Cafe")
-	if err != nil {
-		b.Errorf("method Pay returned not nil error, err => %v", err)
-	}
-
-	want := types.Money(132)
-
-	got := svc.SumPayments(2)
-	if want != got{
-		b.Errorf(" error, want => %v got => %v", want, got)
-	}
-
 }
 

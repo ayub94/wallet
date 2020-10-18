@@ -287,10 +287,7 @@ func (s *Service)Export(dir string) error {
 	   str1 +=  fmt.Sprint(account.ID) + ";"+ fmt.Sprint(account.Phone) +";"+ fmt.Sprint(account.Balance) +"|"
 	}   
 		_, err = filedir1.WriteString(str1)
-		if err != nil {
-			return err
-		}
-	//	return nil
+	
 	}	
 	if len(s.payments) != 0{
 	filedir2, err := os.Create(dir + "/payments.dump") 
@@ -309,10 +306,7 @@ func (s *Service)Export(dir string) error {
 		str2 +=  fmt.Sprint(payment.AccountID) + ";"+ fmt.Sprint(payment.ID) + ";"+ fmt.Sprint(payment.Amount) +";"+ fmt.Sprint(payment.Category)+";"+ fmt.Sprint(payment.Status) +"|"
 		}   
 			_, err = filedir2.WriteString(str2)
-			if err != nil {
-				return err
-			}
-		//	return nil
+		
 	}	
 	if len(s.favorites) != 0{
 	filedir3, err := os.Create(dir + "/favorits.dump") 
@@ -331,10 +325,7 @@ func (s *Service)Export(dir string) error {
 	   str3 +=  fmt.Sprint(favorite.ID) + ";"+ fmt.Sprint(favorite.AccountID) +";"+ fmt.Sprint(favorite.Name)+";"+ fmt.Sprint(favorite.Amount)+";"+ fmt.Sprint(favorite.Category) +"|"
 	}   
 		_, err = filedir3.WriteString(str3)
-		if err != nil {
-			return err
-		}
-		//return nil		
+			
 	}
 	return nil
 }	
