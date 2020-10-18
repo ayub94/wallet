@@ -187,7 +187,7 @@ func TestService_FindAccountByID_notFound_user(t *testing.T) {
 }
 
 
-func TestService_FavoritePayment_success_user(t *testing.T){
+func TestService_FavoritePayment_success(t *testing.T){
 	s := newTestServiceUser()
 	
 	account, err := s.RegisterAccount("+992934251220")
@@ -224,6 +224,31 @@ func TestService_FavoritePayment_success_user(t *testing.T){
 
 func TestService_Export_success_user(t *testing.T) {
 	var svc Service
+
+	svc.RegisterAccount("+992000000001")
+	svc.RegisterAccount("+992000000002")
+	svc.RegisterAccount("+992000000003")
+
+	err := svc.ExportToFile("export.txt")
+	if err != nil {
+		t.Errorf("method ExportToFile returned not nil error, err => %v", err)
+	}
+
+}
+
+func TestService_Import_success_user(t *testing.T) {
+	var svc Service
+
+
+	err := svc.ImportFromFile("export.txt")
+	
+	if err != nil {
+		t.Errorf("method ExportToFile returned not nil error, err => %v", err)
+	}
+
+}
+func TestService_Export_success(t *testing.T) {
+	var svc Service
 	svc.RegisterAccount("+992000000001")
 	svc.RegisterAccount("+992000000002")
 	svc.RegisterAccount("+992000000003")
@@ -235,7 +260,7 @@ func TestService_Export_success_user(t *testing.T) {
   
   }
   
-  func TestService_Import_success_user(t *testing.T) {
+  func TestService_Import_success(t *testing.T) {
 	var svc Service
 	err := svc.ImportFromFile("export.txt")
 	if err != nil {
@@ -244,7 +269,7 @@ func TestService_Export_success_user(t *testing.T) {
   
   }
 
-  func BenchmarkSumPayments(b *testing.B) {
+  func BenchmarkSumPayments_user(b *testing.B) {
 	var svc Service  
 	want:= types.Money(0)
 	for i:=0 ; i < b.N ; i++ {

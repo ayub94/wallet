@@ -515,7 +515,7 @@ func (s *Service)Import(dir string) error{
 }
 //SumPayments сумирует платежи
 func (s *Service)SumPayments(goroutines int) types.Money {
-	goroutines = 2
+	//goroutines = 2
 	wg := sync.WaitGroup{}
 	wg.Add(goroutines) // сколько горутин ждём
 	mu := sync.Mutex{} //мютекс сразу пишут над теми данными, доступ к которым нужно закрытъ
