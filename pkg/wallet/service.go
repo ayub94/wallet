@@ -1,6 +1,7 @@
 package wallet
 
 import (
+	"sync"
 	"io"
 	"strconv"
 	"github.com/google/uuid"
@@ -512,4 +513,24 @@ func (s *Service)Import(dir string) error{
 }		
 	return nil
 }
+//SumPayments сумирует платежи
+func (s *Service)SumPayments(goroutines int) types.Money {
+	wg := sync.WaitGroup{}
+	wg.Add(goroutines) // сколько горутин ждём
+	mu := sync.Mutex{} //мютекс сразу пишут над теми данными, доступ к которым нужно закрытъ
+	//var pmt *types.Payment
+	var sumPeyments types.Money
 
+	go func(){
+		defer wg.Done() // сообщает что завершено
+		for _, peyment := range s.payments {
+			pmt := peyment
+			sumPeyments += pmt.Amount	
+		}
+		mu.Lock()
+		defer mu.Unlock()
+	}()
+	wg.Wait()
+	return sumPeyments
+
+}
