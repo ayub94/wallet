@@ -243,3 +243,16 @@ func TestService_Export_success_user(t *testing.T) {
 	}
   
   }
+
+  func BenchmarkSumPayments(b *testing.B) {
+	var svc Service  
+	want:= types.Money(0)
+	for i:=0 ; i < b.N ; i++ {
+		result := svc.SumPayments(2)
+		if result != types.Money(want) {
+			b.Fatalf("invalid result, got %v, want %v", result, want)
+
+		}
+	}
+}
+
