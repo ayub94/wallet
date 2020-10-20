@@ -573,33 +573,46 @@ func (s *Service) HistoryToFiles(payments []types.Payment, dir string, records i
 
 
 //SumPayments сумирует платежи
-func (s *Service)SumPayments(goroutines int) types.Money {
-	//goroutines = 2
+func (s *Service) SumPayments(goroutines int) types.Money {
 	wg := sync.WaitGroup{}
-	wg.Add(goroutines) // сколько горутин ждём
-	mu := sync.Mutex{} //мютекс сразу пишут над теми данными, доступ к которым нужно закрытъ
-	//var pmt *types.Payment
-	var sumPeyments types.Money
+	mu := sync.Mutex{}
+	sum := int64(0)
+	kol := 0
+	i := 0
+	if goroutines == 0 {
+		kol = len(s.payments)
+	} else {
+		kol = int(len(s.payments) / goroutines)
+	}
+	for i = 0; i < goroutines-1; i++ {
+		wg.Add(1)
+		go func(index int) {
+			defer wg.Done()
+			val := int64(0)
+			payments := s.payments[index*kol : (index+1)*kol]
+			for _, payment := range payments {
+				val += int64(payment.Amount)
+			}
+			mu.Lock()
+			sum += val
+			mu.Unlock()
 
-	go func(){
-		defer wg.Done() // сообщает что завершено
-		for _, peyment := range s.payments {
-			pmt := peyment
-			sumPeyments += pmt.Amount	
+		}(i)
+	}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		val := int64(0)
+		payments := s.payments[i*kol:]
+		for _, payment := range payments {
+			val += int64(payment.Amount)
 		}
 		mu.Lock()
-		defer mu.Unlock()
-	}()
-	go func(){
-		defer wg.Done() // сообщает что завершено
-		for _, peyment := range s.payments {
-			pmt := peyment
-			sumPeyments += pmt.Amount	
-		}
-		mu.Lock()
-		defer mu.Unlock()
+		sum += val
+		mu.Unlock()
+
 	}()
 	wg.Wait()
-	return sumPeyments
-
+	return types.Money(sum)
 }
+
