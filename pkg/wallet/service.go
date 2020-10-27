@@ -31,6 +31,12 @@ var (
 	ErrFileNotFound      = errors.New("file not found")
 )
 
+type Progress struct {
+    Part    int
+    Result  types.Money
+
+}
+
 func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error) {
 	for _, account := range s.accounts {
 		if account.Phone == phone {
@@ -687,3 +693,32 @@ func (s *Service) FilterPayments(accountID int64, goroutines int) ([]types.Payme
 	}
 	return ps, nil
 }
+
+//SumPaymentsWithProgress
+func (s *Service) SumPaymentsWithProgress() <-chan Progress { 
+
+	ch := make(chan Progress,1)
+	defer close(ch)
+	
+	if s.payments == nil {
+		return ch
+	}
+	
+
+	wg := sync.WaitGroup{}	
+	wg.Add(1)
+		
+		go func(ch chan Progress){
+				defer wg.Done()
+				sum:=Progress{}
+
+				for _, value := range s.payments{
+					sum.Result+=value.Amount
+				}	
+				ch<- sum
+				
+	    }(ch)
+	
+	wg.Wait()
+	return ch
+ }

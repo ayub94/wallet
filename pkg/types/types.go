@@ -1,5 +1,9 @@
 package types
 
+import (
+	//"github.com/ayub94/wallet/pkg/types"
+)
+
 // Money представляет ссобой 
 type Money int64
 
@@ -44,3 +48,5 @@ type Favorite struct{
     Amount             Money
     Category           PaymentCategory
 }
+
+
